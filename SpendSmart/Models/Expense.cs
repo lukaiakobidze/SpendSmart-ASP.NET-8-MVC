@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Microsoft.AspNetCore.Mvc.Rendering;
+using System.ComponentModel.DataAnnotations;
 
 namespace SpendSmart.Models
 {
@@ -6,8 +7,10 @@ namespace SpendSmart.Models
     {
         public int Id { set; get; }
         public decimal Value { get; set; }
-
+        
+        public int CategoryId { get; set; }
         [Required]
         public string? Description { get; set; }
+
     }
 }

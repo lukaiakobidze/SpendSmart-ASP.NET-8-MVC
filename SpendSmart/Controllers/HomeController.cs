@@ -1,5 +1,6 @@
 using System.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using SpendSmart.Models;
 
 namespace SpendSmart.Controllers;
@@ -36,6 +37,7 @@ public class HomeController : Controller
             var expenseInDb = _context.Expenses.SingleOrDefault(expense => expense.Id == id);
             return View(expenseInDb);
         }
+
         return View();
     }
     public IActionResult DeleteExpense(int id)

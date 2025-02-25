@@ -4,6 +4,7 @@
 
 @model SpendSmart.Models.Expense
 
+
 <div class="text-center">
     <h1 class="display-4">Create or edit an expense</h1>
 </div>
@@ -14,6 +15,17 @@
 
     <label class="mt-4">value $</label>
     <input class="form-control" type="number" placeholder="0" asp-for="Value" step="0.01" />
+
+    <label class="mt-4">Category</label>
+    <select class="form-control" asp-for="CategoryId">
+        <option value="">Select a Category</option>
+        <option value="1">Entertainment</option>
+        <option value="2">Groceries</option>
+        <option value="3">Utilities</option>
+        <option value="4">Taxes</option>
+        <option value="5">Education</option>
+        <option value="6">Other</option>
+    </select>
 
     <label class="mt-4">Description</label>
     <input class="form-control" type="text" placeholder="Add a description" asp-for="Description" />

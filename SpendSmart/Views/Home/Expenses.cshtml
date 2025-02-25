@@ -17,6 +17,9 @@
                     Value
                 </th>
                 <th>
+                    Category
+                </th>
+                <th>
                     Description
                 </th>
                 <th>
@@ -31,6 +34,13 @@
                     <tr>
                         <td>
                             @expense.Value
+                        </td>
+                        <td>
+                            @(expense.CategoryId == 1 ? "Entertainment" :
+                            expense.CategoryId == 2 ? "Groceries" :
+                            expense.CategoryId == 3 ? "Utilities" :
+                            expense.CategoryId == 4 ? "Taxes" :
+                            expense.CategoryId == 5 ? "Education" : "Other")
                         </td>
                         <td>
                             @expense.Description
