@@ -1,5 +1,7 @@
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using SpendSmart.Models;
+using System;
 
 namespace SpendSmart
 {
@@ -11,7 +13,9 @@ namespace SpendSmart
 
             // Add services to the container.
             builder.Services.AddControllersWithViews();
-            builder.Services.AddDbContext<ExpensesDbContext>(options => options.UseInMemoryDatabase("ExpensesDb"));
+            //builder.Services.AddDbContext<ExpensesDbContext>(options => options.UseInMemoryDatabase("ExpensesDb"));
+            builder.Services.AddDbContext<ExpensesDbContext>(options =>
+                options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
             var app = builder.Build();
 
