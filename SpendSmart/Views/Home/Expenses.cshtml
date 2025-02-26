@@ -23,6 +23,9 @@
                     Description
                 </th>
                 <th>
+                    Date
+                </th>
+                <th>
                     Actions
                 </th>
             </tr>
@@ -44,6 +47,9 @@
                         </td>
                         <td>
                             @expense.Description
+                        </td>
+                        <td>
+                            @expense.Date.Day/@expense.Date.Month/@expense.Date.Year
                         </td>
                         <td>
                             <a asp-action="CreateEditExpense" asp-route-id="@expense.Id">Edit</a>

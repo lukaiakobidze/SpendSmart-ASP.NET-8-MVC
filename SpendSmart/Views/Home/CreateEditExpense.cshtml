@@ -14,7 +14,10 @@
     <input hidden class="form-control" type="number" placeholder="0" asp-for="Id"/>
 
     <label class="mt-4">value $</label>
-    <input class="form-control" type="number" placeholder="0" asp-for="Value" step="0.01" />
+    <input class="form-control" type="number" placeholder="0" asp-for="Value" step="0.01" required />
+
+    <label class="mt-4">Date</label>
+    <input class="form-control" type="date"  asp-for="Date" required />
 
     <label class="mt-4">Category</label>
     <select class="form-control" asp-for="CategoryId">
@@ -28,7 +31,7 @@
     </select>
 
     <label class="mt-4">Description</label>
-    <input class="form-control" type="text" placeholder="Add a description" asp-for="Description" />
+    <input class="form-control" type="text" placeholder="Add a description" asp-for="Description" required />
 
     <button class="btn btn-primary mt-4" type="submit">Submit</button>
 </form>

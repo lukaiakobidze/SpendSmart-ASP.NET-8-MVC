@@ -11,6 +11,8 @@ namespace SpendSmart.Models
         public int CategoryId { get; set; }
         [Required]
         public string? Description { get; set; }
+        
+        public DateTime Date { get; set; }
 
     }
 }
