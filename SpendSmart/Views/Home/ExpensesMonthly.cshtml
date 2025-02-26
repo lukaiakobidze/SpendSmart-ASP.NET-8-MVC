@@ -1,0 +1,77 @@
+﻿@{
+    ViewData["Title"] = "Expenses";
+}
+
+@model List<Expense>
+
+
+<div class="text-center">
+    <h1 class="display-4">Expenses by month</h1>
+    <br />
+    <hr />
+    <h3>Expenses this month: $@ViewBag.Expenses</h3>
+    <br />
+    <form asp-controller="Home" asp-action="ExpensesMonthly" method="get">
+        <div class="form-group" >
+            <label for="month">Enter Month You Want To See (1-12):</label>
+            <div style="display: flex; justify-content: center;">
+                <input id="month" name="month" class="form-control" type="number" value="@ViewBag.SelectedMonth" min="1" max="12" step="1" required style="width: 150px;" />
+            </div>
+            <button type="submit" class="btn btn-primary mt-2">View Month</button>
+        </div>
+    </form>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>
+                    Value
+                </th>
+                <th>
+                    Category
+                </th>
+                <th>
+                    Description
+                </th>
+                <th>
+                    Date
+                </th>
+                <th>
+                    Actions
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            @{
+                foreach (var expense in Model)
+                {
+                    <tr>
+                        <td>
+                            @expense.Value
+                        </td>
+                        <td>
+                            @(expense.CategoryId == 1 ? "Entertainment" :
+                            expense.CategoryId == 2 ? "Groceries" :
+                            expense.CategoryId == 3 ? "Utilities" :
+                            expense.CategoryId == 4 ? "Taxes" :
+                            expense.CategoryId == 5 ? "Education" : "Other")
+                        </td>
+                        <td>
+                            @expense.Description
+                        </td>
+                        <td>
+                            @expense.Date.Day/@expense.Date.Month/@expense.Date.Year
+                        </td>
+                        <td>
+                            <a asp-action="CreateEditExpense" asp-route-id="@expense.Id">Edit</a>
+                            <a asp-action="DeleteExpense" asp-route-id="@expense.Id">Delete</a>
+                        </td>
+                    </tr>
+                }
+            }
+        </tbody>
+    </table>
+    <a asp-action="CreateEditExpense" class="btn btn-secondary">Create new</a>
+    <hr />
+    
+    <br />
+</div>

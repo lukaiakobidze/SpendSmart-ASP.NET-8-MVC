@@ -30,6 +30,43 @@ public class HomeController : Controller
 
         return View(allExpenses);
     }
+    [HttpGet("Home/ExpensesMonthly")]
+    public IActionResult ExpensesMonthly(int? month)
+    {
+        
+        var allExpenses = _context.Expenses.ToList();
+        List<Expense> monthExpenses = new List<Expense>();
+        foreach (var expense in allExpenses)
+        {
+            if (month > 0)
+            {
+                if (expense.Date.Month == month)
+                {
+                    monthExpenses.Add(expense);
+                }
+            }
+            else
+            {
+                if (expense.Date.Month == DateTime.Now.Month)
+                {
+                    monthExpenses.Add(expense);
+                }
+            }
+        }
+        var monthlySum = monthExpenses.Sum(x => x.Value);
+        ViewBag.Expenses = monthlySum;
+        return View(monthExpenses);
+    }
+    public IActionResult ExpensesCategory()
+    {
+        var allExpenses = _context.Expenses.ToList();
+
+        var totalExpenses = allExpenses.Sum(x => x.Value);
+
+        ViewBag.Expenses = totalExpenses;
+
+        return View(allExpenses);
+    }
     public IActionResult CreateEditExpense(int? id)
     {
         if (id != null)
