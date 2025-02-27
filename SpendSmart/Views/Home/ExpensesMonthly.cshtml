@@ -13,9 +13,9 @@
     <br />
     <form asp-controller="Home" asp-action="ExpensesMonthly" method="get">
         <div class="form-group" >
-            <label for="month">Enter Month You Want To See (1-12):</label>
+            <label for="month">Enter Month You Want To See:</label>
             <div style="display: flex; justify-content: center;">
-                <input id="month" name="month" class="form-control" type="number" value="@ViewBag.SelectedMonth" min="1" max="12" step="1" required style="width: 150px;" />
+                <input id="month" name="month" class="form-control" type="number" placeholder="1-12" value="@ViewBag.SelectedMonth" min="1" max="12" step="1" required style="width: 100px;" />
             </div>
             <button type="submit" class="btn btn-primary mt-2">View Month</button>
         </div>

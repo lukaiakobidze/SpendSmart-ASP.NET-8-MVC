@@ -57,15 +57,28 @@ public class HomeController : Controller
         ViewBag.Expenses = monthlySum;
         return View(monthExpenses);
     }
-    public IActionResult ExpensesCategory()
+    public IActionResult ExpensesCategory(int? category)
     {
         var allExpenses = _context.Expenses.ToList();
+        List<Expense> categoryExpenses = new List<Expense>();
 
-        var totalExpenses = allExpenses.Sum(x => x.Value);
-
-        ViewBag.Expenses = totalExpenses;
-
-        return View(allExpenses);
+        foreach (var expense in allExpenses)
+        {
+            if (category > 0)
+            {
+                if (category == expense.CategoryId)
+                {
+                    categoryExpenses.Add(expense);
+                }
+            }
+            else
+            {
+                categoryExpenses.Add(expense);
+            }
+        }
+        var categorySum = categoryExpenses.Sum(x => x.Value);
+        ViewBag.Expenses = categorySum;
+        return View(categoryExpenses);
     }
     public IActionResult CreateEditExpense(int? id)
     {
