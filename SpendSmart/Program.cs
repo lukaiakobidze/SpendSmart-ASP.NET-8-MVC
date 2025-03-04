@@ -2,6 +2,10 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using SpendSmart.Models;
 using System;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 
 namespace SpendSmart
 {
@@ -11,11 +15,31 @@ namespace SpendSmart
         {
             var builder = WebApplication.CreateBuilder(args);
 
-            // Add services to the container.
+            
             builder.Services.AddControllersWithViews();
             //builder.Services.AddDbContext<ExpensesDbContext>(options => options.UseInMemoryDatabase("ExpensesDb"));
             builder.Services.AddDbContext<ExpensesDbContext>(options =>
                 options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+
+            //builder.Services.AddIdentity<IdentityUser, IdentityRole>()
+            //    .AddEntityFrameworkStores<ExpensesDbContext>()
+            //    .AddDefaultTokenProviders();
+
+            builder.Services.AddIdentity<IdentityUser, IdentityRole>(options =>
+            {
+                options.SignIn.RequireConfirmedAccount = false; // Adjust as needed
+            })
+                .AddEntityFrameworkStores<ExpensesDbContext>()
+                .AddDefaultTokenProviders();
+
+
+            builder.Services.ConfigureApplicationCookie(options =>
+            {
+                options.LoginPath = "/Account/Login"; 
+                options.AccessDeniedPath = "/Account/AccessDenied";
+            });
+
+            builder.Services.AddControllersWithViews();
 
             var app = builder.Build();
 
@@ -32,6 +56,7 @@ namespace SpendSmart
 
             app.UseRouting();
 
+            app.UseAuthentication();
             app.UseAuthorization();
 
             app.MapControllerRoute(

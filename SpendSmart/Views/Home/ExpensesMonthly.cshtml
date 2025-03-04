@@ -12,12 +12,12 @@
     <h3>Expenses this month: $@ViewBag.Expenses</h3>
     <br />
     <form asp-controller="Home" asp-action="ExpensesMonthly" method="get">
-        <div class="form-group" >
+        <div class="form-group">
             <label for="month">Enter Month You Want To See:</label>
             <div style="display: flex; justify-content: center;">
                 <input id="month" name="month" class="form-control" type="number" placeholder="1-12" value="@ViewBag.SelectedMonth" min="1" max="12" step="1" required style="width: 100px;" />
             </div>
-            <button type="submit" class="btn btn-primary mt-2">View Month</button>
+            <button type="submit" class="btn btn-primary mt-2 mb-4">View Month</button>
         </div>
     </form>
     <table class="table">

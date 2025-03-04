@@ -1,40 +1,50 @@
 using System.Diagnostics;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using SpendSmart.Models;
 
 namespace SpendSmart.Controllers;
 
+[Authorize]
 public class HomeController : Controller
 {
     private readonly ILogger<HomeController> _logger;
-
     private readonly ExpensesDbContext _context;
-    public HomeController(ILogger<HomeController> logger, ExpensesDbContext context)
+    private readonly UserManager<IdentityUser> _userManager;
+
+    public HomeController(ILogger<HomeController> logger, ExpensesDbContext context, UserManager<IdentityUser> userManager)
     {
         _logger = logger;
         _context = context;
+        _userManager = userManager;
     }
 
     public IActionResult Index()
     {
+        //var userName = User.Identity.IsAuthenticated ? User.Identity.Name : "Spender";
+        //ViewBag.UserName = userName;
+
         return View();
     }
     public IActionResult Expenses()
     {
-        var allExpenses = _context.Expenses.ToList();
+        var userId = _userManager.GetUserId(User); 
+        var userExpenses = _context.Expenses.Where(e => e.UserId == userId).ToList(); 
 
-        var totalExpenses = allExpenses.Sum(x => x.Value);
+        var totalExpenses = userExpenses.Sum(x => x.Value);
 
         ViewBag.Expenses = totalExpenses;
 
-        return View(allExpenses);
+        return View(userExpenses);
     }
     [HttpGet("Home/ExpensesMonthly")]
     public IActionResult ExpensesMonthly(int? month)
     {
-        
-        var allExpenses = _context.Expenses.ToList();
+        var userId = _userManager.GetUserId(User); 
+        var allExpenses = _context.Expenses.Where(e => e.UserId == userId).ToList(); 
+
         List<Expense> monthExpenses = new List<Expense>();
         foreach (var expense in allExpenses)
         {
@@ -53,13 +63,17 @@ public class HomeController : Controller
                 }
             }
         }
+
         var monthlySum = monthExpenses.Sum(x => x.Value);
         ViewBag.Expenses = monthlySum;
+
         return View(monthExpenses);
     }
     public IActionResult ExpensesCategory(int? category)
     {
-        var allExpenses = _context.Expenses.ToList();
+        var userId = _userManager.GetUserId(User); 
+        var allExpenses = _context.Expenses.Where(e => e.UserId == userId).ToList(); 
+
         List<Expense> categoryExpenses = new List<Expense>();
 
         foreach (var expense in allExpenses)
@@ -76,8 +90,10 @@ public class HomeController : Controller
                 categoryExpenses.Add(expense);
             }
         }
+
         var categorySum = categoryExpenses.Sum(x => x.Value);
         ViewBag.Expenses = categorySum;
+
         return View(categoryExpenses);
     }
     public IActionResult CreateEditExpense(int? id)
@@ -99,13 +115,27 @@ public class HomeController : Controller
     }
     public IActionResult CreateEditExpenseForm(Expense model)
     {
-        if(model.Id == 0)
+        if (model.Id == 0)
         {
+            
+            model.UserId = _userManager.GetUserId(User); 
             _context.Expenses.Add(model);
         }
         else
         {
-            _context.Expenses.Update(model);
+            
+            var existingExpense = _context.Expenses.Find(model.Id);
+
+            if (existingExpense == null)
+            {
+                return NotFound();
+            }
+
+            existingExpense.Value = model.Value;
+            existingExpense.Description = model.Description;
+            existingExpense.CategoryId = model.CategoryId;
+            existingExpense.Date = model.Date;
+            
         }
 
         _context.SaveChanges();

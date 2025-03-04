@@ -32,6 +32,12 @@
                             <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="ExpensesCategory">Expenses by Category</a>
                         </li>
                     </ul>
+                    @if (User.Identity.IsAuthenticated)
+                    {
+                        <span class="me-4">@User.Identity.Name</span>
+                        <a class="me-4" href="@Url.Action("Logout", "Account")">Logout</a>
+                    }
+                    
                 </div>
             </div>
         </nav>

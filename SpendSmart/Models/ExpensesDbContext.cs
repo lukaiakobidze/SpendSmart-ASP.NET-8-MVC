@@ -1,14 +1,27 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 
 namespace SpendSmart.Models
 {
-    public class ExpensesDbContext : DbContext
+    public class ExpensesDbContext : IdentityDbContext<IdentityUser>
     {
+        public ExpensesDbContext(DbContextOptions<ExpensesDbContext> options)
+            : base(options)
+        {
+        }
+
         public DbSet<Expense> Expenses { get; set; }
 
-        public ExpensesDbContext(DbContextOptions<ExpensesDbContext> options) : base(options)
-        {
-            
-        }
+        //protected override void OnModelCreating(ModelBuilder builder)
+        //{
+        //    base.OnModelCreating(builder);
+
+        //    // Explicitly configure ApplicationUser if needed
+        //    builder.Entity<IdentityUser>(b =>
+        //    {
+        //        b.Property(u => u.FirstName).HasMaxLength(100);
+        //    });
+        //}
     }
 }
