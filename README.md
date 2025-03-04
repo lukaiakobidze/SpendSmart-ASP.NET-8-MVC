@@ -4,6 +4,7 @@ A basic Expense Tracker application built with **ASP.NET MVC**, using **Entity F
 
 ## Features
 
+- **Personalized expense tracking**: Working Authorization using ASP.NET CORE.
 - **Add Expenses**: Record new expenses with details like amount, category, date and description.
 - **Edit & Delete Expenses**: Update or remove existing expense entries.
 - **View Expenses by Month**: Filter and view expenses based on selected months.
@@ -36,7 +37,7 @@ A basic Expense Tracker application built with **ASP.NET MVC**, using **Entity F
 
 ## Future Improvements
 
-- User authentication for personalized expense tracking.
+- ~~User authentication for personalized expense tracking.~~
 - Export expenses to CSV/PDF.
 - Add charts and graphs for better expense visualization.
 
