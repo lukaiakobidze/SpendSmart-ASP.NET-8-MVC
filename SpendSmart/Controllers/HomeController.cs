@@ -4,6 +4,9 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using SpendSmart.Models;
+using iTextSharp.text;
+using iTextSharp.text.pdf;
+using System.IO;
 
 namespace SpendSmart.Controllers;
 
@@ -142,6 +145,44 @@ public class HomeController : Controller
 
         return RedirectToAction("Expenses");
     }
+
+    public IActionResult ExportToPDF()
+    {
+        var userId = _userManager.GetUserId(User);
+        var data = _context.Expenses.Where(e => e.UserId == userId).ToList();
+        var doc = new Document();
+        var stream = new MemoryStream();
+        PdfWriter.GetInstance(doc, stream);
+
+        doc.Open();
+        doc.Add(new Paragraph($"    Expense Report for:     {_userManager.GetUserName(User)}"));
+        doc.Add(new Paragraph(" "));
+        PdfPTable table = new PdfPTable(4);
+        
+        table.AddCell("Category");
+        table.AddCell("Amount");
+        table.AddCell("Date");
+        table.AddCell("Description");
+
+        foreach (var item in data)
+        {
+            table.AddCell(item.CategoryId.ToString());
+            table.AddCell(item.Value.ToString());
+            table.AddCell(item.Date.ToString());
+            table.AddCell(item.Description);
+        }
+
+        doc.Add(table);
+        doc.Close();
+
+        return File(stream.ToArray(), "application/pdf", "Expenses.pdf");
+    }
+
+
+
+
+
+
     public IActionResult Privacy()
     {
         return View();
