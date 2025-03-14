@@ -9,6 +9,7 @@ A basic Expense Tracker application built with **ASP.NET MVC**, using **Entity F
 - **Edit & Delete Expenses**: Update or remove existing expense entries.
 - **View Expenses by Month**: Filter and view expenses based on selected months.
 - **View Expenses by Category**: Organize and analyze expenses based on different categories.
+- **Export Pdf Files**: Save a table of your expenses filtered by month or category, exporting a PDF file.
 
 ## Technologies Used
 
@@ -16,6 +17,7 @@ A basic Expense Tracker application built with **ASP.NET MVC**, using **Entity F
 - **Entity Framework (EF Core)**
 - **SQL Database**
 - **Bootstrap (for styling)**
+- **ITextSharp (for pdf export)**
 
 ## Setup Instructions
 
@@ -37,8 +39,7 @@ A basic Expense Tracker application built with **ASP.NET MVC**, using **Entity F
 
 ## Future Improvements
 
-- ~~User authentication for personalized expense tracking.~~
-- Export expenses to CSV/PDF.
+- Export expenses to CSV/EXCL.
 - Add charts and graphs for better expense visualization.
 
 ## License
