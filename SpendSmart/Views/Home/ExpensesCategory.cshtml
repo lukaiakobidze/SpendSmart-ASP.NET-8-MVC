@@ -28,6 +28,7 @@
             <button type="submit" class="btn btn-primary mt-2 mb-4">View Category</button>
         </div>
     </form>
+    <a asp-action="ExportToPDFCategory" asp-route-category="@ViewBag.CurrentCategory" class="btn btn-danger">Export PDF</a>
     <table class="table">
         <thead>
             <tr>

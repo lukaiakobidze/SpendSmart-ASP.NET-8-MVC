@@ -20,6 +20,7 @@
             <button type="submit" class="btn btn-primary mt-2 mb-4">View Month</button>
         </div>
     </form>
+    <a asp-action="ExportToPDFMonth" asp-route-month="@ViewBag.CurrentMonth" class="btn btn-danger">Export PDF</a>
     <table class="table">
         <thead>
             <tr>

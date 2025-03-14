@@ -43,6 +43,7 @@ public class HomeController : Controller
         return View(userExpenses);
     }
     [HttpGet("Home/ExpensesMonthly")]
+
     public IActionResult ExpensesMonthly(int? month)
     {
         var userId = _userManager.GetUserId(User); 
@@ -69,10 +70,19 @@ public class HomeController : Controller
 
         var monthlySum = monthExpenses.Sum(x => x.Value);
         ViewBag.Expenses = monthlySum;
+        if (month != null)
+        {
+            ViewBag.CurrentMonth = month;
+        }
+        else
+        {
+            ViewBag.CurrentMonth = DateTime.Now.Month;
+        }
 
-        return View(monthExpenses);
+            return View(monthExpenses);
     }
-    public IActionResult ExpensesCategory(int? category)
+
+    public IActionResult ExpensesCategory(int category = 0)
     {
         var userId = _userManager.GetUserId(User); 
         var allExpenses = _context.Expenses.Where(e => e.UserId == userId).ToList(); 
@@ -96,9 +106,11 @@ public class HomeController : Controller
 
         var categorySum = categoryExpenses.Sum(x => x.Value);
         ViewBag.Expenses = categorySum;
+        ViewBag.CurrentCategory = category;
 
         return View(categoryExpenses);
     }
+
     public IActionResult CreateEditExpense(int? id)
     {
         if (id != null)
@@ -109,6 +121,7 @@ public class HomeController : Controller
 
         return View();
     }
+
     public IActionResult DeleteExpense(int id)
     {
         var expenseInDb = _context.Expenses.SingleOrDefault(expense => expense.Id == id);
@@ -116,6 +129,7 @@ public class HomeController : Controller
         _context.SaveChanges();
         return RedirectToAction("Expenses");
     }
+
     public IActionResult CreateEditExpenseForm(Expense model)
     {
         if (model.Id == 0)
@@ -178,10 +192,87 @@ public class HomeController : Controller
         return File(stream.ToArray(), "application/pdf", "Expenses.pdf");
     }
 
+    public IActionResult ExportToPDFCategory(int category)
+    {
+        var userId = _userManager.GetUserId(User);
 
+        var expensesQuery = _context.Expenses.Where(e => e.UserId == userId);
+        
+        if (category > 0) 
+        {
+            expensesQuery = expensesQuery.Where(e => e.CategoryId == category);
+        }
 
+        var categorydata = expensesQuery.ToList();
 
+        
+        var doc = new Document();
+        var stream = new MemoryStream();
+        PdfWriter.GetInstance(doc, stream);
 
+        doc.Open();
+        doc.Add(new Paragraph($"Expense Report for: {_userManager.GetUserName(User)}"));
+        doc.Add(new Paragraph(" "));
+
+        PdfPTable table = new PdfPTable(4);
+        table.AddCell("Category");
+        table.AddCell("Amount");
+        table.AddCell("Date");
+        table.AddCell("Description");
+        
+        foreach (var item in categorydata)
+        {
+            table.AddCell(item.CategoryId.ToString());
+            table.AddCell(item.Value.ToString("C"));
+            table.AddCell(item.Date.ToString("yyyy-MM-dd"));
+            table.AddCell(item.Description);
+        }
+
+        doc.Add(table);
+        doc.Close();
+
+        return File(stream.ToArray(), "application/pdf", $"Expenses_Category_{category}.pdf");
+    }
+
+    public IActionResult ExportToPDFMonth(int month)
+    {
+        var userId = _userManager.GetUserId(User);
+        var expensesQuery = _context.Expenses.Where(e => e.UserId == userId);
+
+        if (month > 0)
+        {
+            expensesQuery = expensesQuery.Where(e => e.Date.Month == month);
+        }
+        var categorydata = expensesQuery.ToList();
+
+        
+        var doc = new Document();
+        var stream = new MemoryStream();
+        PdfWriter.GetInstance(doc, stream);
+
+        doc.Open();
+        doc.Add(new Paragraph($"Expense Report for: {_userManager.GetUserName(User)}"));
+        doc.Add(new Paragraph(" "));
+
+        PdfPTable table = new PdfPTable(4);
+        table.AddCell("Category");
+        table.AddCell("Amount");
+        table.AddCell("Date");
+        table.AddCell("Description");
+
+        foreach (var item in categorydata)
+        {
+            table.AddCell(item.CategoryId.ToString());
+            table.AddCell(item.Value.ToString());
+            table.AddCell(item.Date.ToString());
+            table.AddCell(item.Description);
+        }
+
+        doc.Add(table);
+        doc.Close();
+
+        return File(stream.ToArray(), "application/pdf", $"Expenses_Month_{month}.pdf");
+    }
 
     public IActionResult Privacy()
     {
